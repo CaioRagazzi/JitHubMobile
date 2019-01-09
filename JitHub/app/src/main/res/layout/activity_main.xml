@@ -10,7 +10,7 @@
     <Button
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:background="@drawable/fundo"
+        android:background="@drawable/fundo_botao_main"
         android:text="+"
         android:textSize="40sp"
         android:textColor="#ffff"
