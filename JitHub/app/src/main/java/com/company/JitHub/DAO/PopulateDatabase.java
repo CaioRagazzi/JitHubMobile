@@ -13,7 +13,6 @@ public class PopulateDatabase {
         contexto = context;
     }
 
-
     public void populate(){
 
         DatabaseHelper dbHelper = new DatabaseHelper(contexto);
