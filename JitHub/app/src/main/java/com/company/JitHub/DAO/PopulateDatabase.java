@@ -6,10 +6,17 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class PopulateDatabase {
 
+    private Context contexto;
 
-    public void populate(Context context){
+    public PopulateDatabase(Context context){
 
-        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        contexto = context;
+    }
+
+
+    public void populate(){
+
+        DatabaseHelper dbHelper = new DatabaseHelper(contexto);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
             cv.put("LoginID", 1);

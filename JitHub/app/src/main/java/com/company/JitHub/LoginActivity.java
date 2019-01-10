@@ -33,6 +33,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,6 +159,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return;
         }
 
+        PopulateDatabase populate = new PopulateDatabase(this);
+        populate.populate();
+
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -165,42 +169,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        PopulateDatabase populate = new PopulateDatabase();
-        //populate.populate(this);
-
-        String selectQuery = "SELECT * FROM Logins WHERE Senha = '" + password + "' AND Login = '" + email + "'";
-
-        DatabaseHelper db = new DatabaseHelper(this);
-        SQLiteDatabase  database = db.getWritableDatabase();
-
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-
-        String emailRetorno = cursor.getString(cursor.getColumnIndex("Login"));
-        String senhaRetorno = cursor.getString(cursor.getColumnIndex("Senha"));
-
-        db.close();
-        database.close();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        //Verificar se os campos login e senha não estão vazios
+        if (TextUtils.isEmpty(password)){
+            mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address and password.
-        if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(email)){
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
+        }
+
+        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
+            cancel = autenticaUsuario(password, email);
+            if (cancel){
+                focusView = mEmailView;
+                Toast toast = Toast.makeText(this, "Login e/ou senha inválidos", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
 
         if (cancel) {
@@ -217,15 +209,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
+    private boolean autenticaUsuario(String password, String email) {
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
+        //TODO - Melhorar essa parte futuramente
+        String emailRetorno;
+        String senhaRetorno;
+        String selectQuery = "SELECT * FROM Logins WHERE Senha = '" + password + "' AND Login = '" + email + "'";
 
-        return password.length() > 4;
+        DatabaseHelper db = new DatabaseHelper(this);
+        SQLiteDatabase  database = db.getWritableDatabase();
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.getCount() > 0){
+            cursor.moveToFirst();
+
+            emailRetorno = cursor.getString(cursor.getColumnIndex("Login"));
+            senhaRetorno = cursor.getString(cursor.getColumnIndex("Senha"));
+
+            db.close();
+            database.close();
+
+            if (password.equals(senhaRetorno) && email.equals(emailRetorno)){
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
     }
 
     /**
