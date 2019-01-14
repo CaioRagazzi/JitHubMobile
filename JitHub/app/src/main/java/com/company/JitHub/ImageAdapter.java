@@ -1,31 +1,31 @@
 package com.company.JitHub;
 
 import android.content.Context;
-import android.os.Environment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ThumbnailUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
-    ArrayList<String> f = new ArrayList<String>();
+    String[] mfilesPaths;
 
-    public ImageAdapter(Context c) {
-
+    public ImageAdapter(Context c, String[] filesPath) {
         mContext = c;
+        mfilesPaths = filesPath;
     }
 
     @Override
     public int getCount() {
 
-        return mThumbIds.length;
+        return mfilesPaths.length;
     }
 
     @Override
@@ -53,42 +53,17 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(mThumbIds[position]);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 3;
+        //Mostrar thumbnail
+        //Bitmap bmp = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(mfilesPaths[position]), 64, 64);
+        //Mostrar imagem inteira
+        Bitmap bmp = BitmapFactory.decodeFile(mfilesPaths[position], options);
+        //Matrix matrix = new Matrix();
+        //matrix.postRotate(90);
+        //bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+        imageView.setImageBitmap(bmp);
+
         return imageView;
     }
-
-    public void showImageList() {
-
-        File[] listFile;
-
-        File file2 = new File(android.os.Environment.getExternalStorageDirectory(),"");
-        File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-
-        if (file.isDirectory()){
-
-            listFile = file.listFiles();
-
-            for (int i = 0; i < listFile.length; i++)
-            {
-                f.add(listFile[i].getAbsolutePath());
-            }
-        }
-    }
-
-    private Integer[] mThumbIds = {
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-    };
 }

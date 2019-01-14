@@ -13,5 +13,5 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="compose_shortcut_short_label1">"Teste"</string>
+    <string name="login_invalido">"Login e/ou senha inválidos"</string>
 </resources>

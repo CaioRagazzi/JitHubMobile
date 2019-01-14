@@ -1,6 +1,5 @@
 package com.company.JitHub;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -25,16 +23,20 @@ public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
-    String mCurrentPhotoPath;
+    private String[] filesPaths;
+    private String mCurrentPhotoPath;
+    private GridView grid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getGridItemsList();
         Button botao = findViewById(R.id.novo);
-        GridView grid = findViewById(R.id.gridview);
-        grid.setAdapter(new ImageAdapter(this));
+        grid = findViewById(R.id.gridview);
+        grid.setAdapter(new ImageAdapter(this, filesPaths));
+
 
         botao.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +67,13 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        getGridItemsList();
+        grid.setAdapter(new ImageAdapter(this, filesPaths));
     }
 
     @Override
@@ -83,10 +90,23 @@ public class MainActivity extends AppCompatActivity {
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
+
         );
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    private void getGridItemsList() {
+        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        File[] files = directory.listFiles();
+        filesPaths = new String[files.length];
+
+        for (int i = 0; i < files.length; i++) {
+            filesPaths[i] = files[i].getAbsolutePath();
+        }
+
     }
 }

@@ -120,10 +120,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)){
-            cancel = autenticaUsuario(password, login);
+            cancel = autenticaUsuario(login, password);
             if (cancel){
                 focusView = mLoginView;
-                Toast toast = Toast.makeText(this, "Login e/ou senha inválidos", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this, getString(R.string.login_invalido), Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private boolean autenticaUsuario(String senha, String login) {
+    private boolean autenticaUsuario(String login, String senha) {
 
         Usuario usuario = new Usuario(login, senha).Get(this);
 
