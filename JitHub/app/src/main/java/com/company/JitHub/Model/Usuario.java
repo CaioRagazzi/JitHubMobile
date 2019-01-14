@@ -1,12 +1,23 @@
 package com.company.JitHub.Model;
 
+import android.content.Context;
+
+import com.company.JitHub.DAO.UsuarioDAO;
+
 public class Usuario {
 
-    public String _nome;
-    public String _senha;
+    private String _login;
+    private String _senha;
 
-    public Usuario(String nome, String senha){
-        _nome = nome;
+    public Usuario(String login, String senha){
+        _login = login;
         _senha = senha;
+    }
+
+    public Usuario Get(Context contexto){
+
+        Usuario usuario = new UsuarioDAO(contexto).GetUsuario(_login, _senha);
+
+        return usuario;
     }
 }

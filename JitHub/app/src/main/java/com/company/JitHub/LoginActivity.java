@@ -36,6 +36,7 @@ import java.util.List;
 
 import com.company.JitHub.DAO.DatabaseHelper;
 import com.company.JitHub.DAO.PopulateDatabase;
+import com.company.JitHub.Model.Usuario;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
@@ -77,8 +78,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mLoginSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mLoginSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -100,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginView.setError(null);
         mPasswordView.setError(null);
 
-        String email = mLoginView.getText().toString();
+        String login = mLoginView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -112,14 +113,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(email)){
+        if (TextUtils.isEmpty(login)){
             mLoginView.setError(getString(R.string.error_field_required));
             focusView = mLoginView;
             cancel = true;
         }
 
-        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
-            cancel = autenticaUsuario(password, email);
+        if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)){
+            cancel = autenticaUsuario(password, login);
             if (cancel){
                 focusView = mLoginView;
                 Toast toast = Toast.makeText(this, "Login e/ou senha inválidos", Toast.LENGTH_SHORT);
@@ -132,39 +133,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             closeKeyboard();
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(login, password);
             mAuthTask.execute((Void) null);
         }
     }
 
-    private boolean autenticaUsuario(String password, String email) {
+    private boolean autenticaUsuario(String senha, String login) {
 
-        //TODO - Melhorar essa parte futuramente
-        String emailRetorno;
-        String senhaRetorno;
-        String selectQuery = "SELECT * FROM Logins WHERE Senha = '" + password + "' AND Login = '" + email + "'";
+        Usuario usuario = new Usuario(login, senha).Get(this);
 
-        DatabaseHelper db = new DatabaseHelper(this);
-        SQLiteDatabase  database = db.getWritableDatabase();
-
-        Cursor cursor = database.rawQuery(selectQuery, null);
-
-        if (cursor.getCount() > 0){
-            cursor.moveToFirst();
-
-            emailRetorno = cursor.getString(cursor.getColumnIndex("Login"));
-            senhaRetorno = cursor.getString(cursor.getColumnIndex("Senha"));
-
-            db.close();
-            database.close();
-
-            if (password.equals(senhaRetorno) && email.equals(emailRetorno)){
-                return false;
-            } else {
-                return true;
-            }
-        } else {
+        if (usuario == null){
             return true;
+        } else {
+            return false;
         }
     }
 
