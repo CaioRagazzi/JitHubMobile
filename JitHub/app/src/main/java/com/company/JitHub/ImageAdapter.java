@@ -5,21 +5,27 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ThumbnailUtils;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class ImageAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private LayoutInflater inflater;
+    private Context context;
     String[] mfilesPaths;
 
-    public ImageAdapter(Context c, String[] filesPath) {
-        mContext = c;
+    public ImageAdapter(Context context, String[] filesPath) {
+        this.context = context;
         mfilesPaths = filesPath;
+        inflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -37,33 +43,37 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
 
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
-        if (convertView == null) {
-            // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(300, 300));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(2, 2, 2, 2);
+        final ViewHolder holder;
+        View view = convertView;
+        if (view == null) {
+            view = inflater.inflate(R.layout.item_grid_image, parent, false);
+            holder = new ViewHolder();
+            assert view != null;
+
+            holder.imageView = (ImageView) view.findViewById(R.id.image);
+
+            view.setTag(holder);
         } else {
-            imageView = (ImageView) convertView;
+            holder = (ViewHolder) view.getTag();
         }
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 3;
-        //Mostrar thumbnail
-        //Bitmap bmp = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(mfilesPaths[position]), 64, 64);
-        //Mostrar imagem inteira
-        Bitmap bmp = BitmapFactory.decodeFile(mfilesPaths[position], options);
-        //Matrix matrix = new Matrix();
-        //matrix.postRotate(90);
-        //bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-        imageView.setImageBitmap(bmp);
+        String url = mfilesPaths[position];
 
-        return imageView;
+        Picasso.get()
+                .load("file://" + url)
+                .placeholder(R.drawable.ic_launcher_background)
+                .fit()
+                .into(holder.imageView);
+
+        return view;
+    }
+
+    static class ViewHolder {
+        ImageView imageView;
     }
 }
