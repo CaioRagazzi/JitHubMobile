@@ -1,7 +1,6 @@
-package com.company.JitHub;
+package com.company.JitHub.Activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -13,6 +12,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import com.company.JitHub.Adapter.ImageAdapter;
+import com.company.JitHub.R;
 
 import java.io.File;
 import java.io.IOException;

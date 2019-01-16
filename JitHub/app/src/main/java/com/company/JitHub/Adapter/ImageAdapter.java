@@ -1,4 +1,4 @@
-package com.company.JitHub;
+package com.company.JitHub.Adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.company.JitHub.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -64,11 +65,11 @@ public class ImageAdapter extends BaseAdapter {
 
         String url = mfilesPaths[position];
 
-        Picasso.get()
-                .load("file://" + url)
-                .placeholder(R.drawable.ic_launcher_background)
-                .fit()
-                .into(holder.imageView);
+            Picasso.get()
+                    .load("file://" + url)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .fit()
+                    .into(holder.imageView);
 
         return view;
     }

@@ -1,11 +1,10 @@
-package com.company.JitHub;
+package com.company.JitHub.Activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -34,9 +33,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.company.JitHub.DAO.DatabaseHelper;
 import com.company.JitHub.DAO.PopulateDatabase;
 import com.company.JitHub.Model.Usuario;
+import com.company.JitHub.R;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
@@ -57,14 +56,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
 
         mLoginView = findViewById(R.id.login);
-        mLoginView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                View focusView = mPasswordView;
-                focusView.requestFocus();
-                return false;
-            }
-        });
 
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
