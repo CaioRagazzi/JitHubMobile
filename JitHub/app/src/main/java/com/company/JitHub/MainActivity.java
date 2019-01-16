@@ -32,11 +32,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getGridItemsList();
         Button botao = findViewById(R.id.novo);
         grid = findViewById(R.id.gridview);
-        grid.setAdapter(new ImageAdapter(this, filesPaths));
-
 
         botao.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
-
+                    //TODO Adicionar algo aqui!
                     }
                     // Continue only if the File was successfully created
                     if (photoFile != null) {
@@ -72,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+
         getGridItemsList();
         grid.setAdapter(new ImageAdapter(this, filesPaths));
     }
@@ -107,6 +105,5 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < files.length; i++) {
             filesPaths[i] = files[i].getAbsolutePath();
         }
-
     }
 }
