@@ -1,6 +1,5 @@
 package com.company.JitHub.Activity;
 
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -25,19 +24,20 @@ import com.company.JitHub.R;
 public abstract class BaseActivity extends AppCompatActivity {
 
     //TOOLBAR
-    private String[] mNavigationDrawerItemTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    Toolbar toolbar;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+    protected String[] mNavigationDrawerItemTitles;
+    protected DrawerLayout mDrawerLayout;
+    protected ListView mDrawerList;
+    protected Toolbar toolbar;
+    protected CharSequence mDrawerTitle;
+    protected CharSequence mTitle;
+    protected android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
     //TOOLBAR
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(getLayoutResource());
 
         //TOOLBAR
         mTitle = mDrawerTitle = getTitle();
@@ -64,7 +64,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+    protected abstract int getLayoutResource();
+
+    protected class DrawerItemClickListener implements ListView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -131,8 +133,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void setupToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
     }
 
     void setupDrawerToggle(){

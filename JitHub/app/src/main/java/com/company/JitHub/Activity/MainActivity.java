@@ -36,50 +36,22 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     private String[] filesPaths;
     private GridView grid;
 
-    //TOOLBAR
-    private String[] mNavigationDrawerItemTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    Toolbar toolbar;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
-    //TOOLBAR
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_main;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //TOOLBAR
-        mTitle = mDrawerTitle = getTitle();
-        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        setupToolbar();
-
-        DrawerDataModel[] drawerItem = new DrawerDataModel[3];
-        drawerItem[0] = new DrawerDataModel(R.drawable.ic_launcher_foreground, "Connect");
-        drawerItem[1] = new DrawerDataModel(R.drawable.ic_launcher_foreground, "Fixtures");
-        drawerItem[2] = new DrawerDataModel(R.drawable.ic_launcher_foreground, "Table");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.list_view_item_row, drawerItem);
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
-        setupDrawerToggle();
-        //TOOLBAR
 
         Button botao = findViewById(R.id.novo);
         grid = findViewById(R.id.gridview);
@@ -113,83 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-
-    }
-
-    private void selectItem(int position) {
-
-        Fragment fragment = null;
-
-        switch (position) {
-            case 0:
-                fragment = new ConnectFragment();
-                break;
-            case 1:
-                fragment = new FixturesFragment();
-                break;
-            case 2:
-                fragment = new TableFragment();
-                break;
-
-            default:
-                break;
-        }
-
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-            mDrawerList.setItemChecked(position, true);
-            mDrawerList.setSelection(position);
-            setTitle(mNavigationDrawerItemTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
-
-        } else {
-            Log.e("MainActivity", "Error in creating fragment");
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    void setupToolbar(){
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-    }
-
-    void setupDrawerToggle(){
-        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.app_name, R.string.app_name);
-        //This is necessary to change the icon of the Drawer Toggle upon state change.
-        mDrawerToggle.syncState();
     }
 
     @Override
