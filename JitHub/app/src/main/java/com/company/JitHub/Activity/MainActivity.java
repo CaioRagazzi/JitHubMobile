@@ -6,29 +6,16 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
 
-import com.company.JitHub.Adapter.DrawerItemCustomAdapter;
 import com.company.JitHub.Adapter.ImageAdapter;
-import com.company.JitHub.Fragments.ConnectFragment;
-import com.company.JitHub.Fragments.FixturesFragment;
-import com.company.JitHub.Model.DrawerDataModel;
 import com.company.JitHub.R;
-import com.company.JitHub.Fragments.TableFragment;
 
 
 import java.io.File;
@@ -44,6 +31,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public int getLayoutResource() {
+
         return R.layout.activity_main;
     }
 
@@ -67,11 +55,11 @@ public class MainActivity extends BaseActivity {
                     try {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
-                    //TODO Adicionar algo aqui!
+                        //TODO Adicionar algo aqui!
                     }
                     // Continue only if the File was successfully created
                     if (photoFile != null) {
-                        Uri photoURI = FileProvider.getUriForFile(MainActivity.this,"com.company.JitHub",photoFile);
+                        Uri photoURI = FileProvider.getUriForFile(MainActivity.this, "com.company.JitHub", photoFile);
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                         startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     }
@@ -88,7 +76,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         getGridItemsList();

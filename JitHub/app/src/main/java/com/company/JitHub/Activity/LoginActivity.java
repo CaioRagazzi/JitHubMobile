@@ -100,21 +100,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        if (TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(login)){
+        if (TextUtils.isEmpty(login)) {
             mLoginView.setError(getString(R.string.error_field_required));
             focusView = mLoginView;
             cancel = true;
         }
 
-        if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)){
+        if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
             cancel = autenticaUsuario(login, password);
-            if (cancel){
+            if (cancel) {
                 focusView = mLoginView;
                 Toast toast = Toast.makeText(this, getString(R.string.login_invalido), Toast.LENGTH_SHORT);
                 toast.show();
@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         Usuario usuario = new Usuario(login, senha).Get(this);
 
-        if (usuario == null){
+        if (usuario == null) {
             return true;
         } else {
             return false;
@@ -262,8 +262,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
-        if (view != null){
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
