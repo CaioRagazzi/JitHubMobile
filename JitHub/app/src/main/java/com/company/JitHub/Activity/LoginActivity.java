@@ -185,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://jithubapi.herokuapp.com/")
                     .addConverterFactory(GsonConverterFactory.create())
@@ -230,6 +230,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mLoginSignInButton.setVisibility(View.VISIBLE);
                 mPasswordView.requestFocus();
             }
         }
