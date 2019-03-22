@@ -11,8 +11,5 @@ import retrofit2.http.Query;
 public interface JsonUsuarioApi {
 
     @GET("usuarios")
-    Call<List<Usuario>> getUsuarios();
-
-    @GET("usuarios")
     Call<List<Usuario>> getUsuarioPorNome(@Query("nome") String nome);
 }
