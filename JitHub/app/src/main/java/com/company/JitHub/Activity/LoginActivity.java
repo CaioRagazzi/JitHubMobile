@@ -1,8 +1,5 @@
 package com.company.JitHub.Activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +11,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -36,19 +32,20 @@ import java.util.List;
 import com.company.JitHub.DAO.PopulateDatabase;
 import com.company.JitHub.Model.Usuario;
 import com.company.JitHub.R;
+import com.company.JitHub.Retrofit.JsonUsuarioApi;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    private static final int REQUEST_READ_CONTACTS = 0;
-
-    private static final String[] DUMMY_CREDENTIALS = new String[]{};
 
     private UserLoginTask mAuthTask = null;
 
     private AutoCompleteTextView mLoginView;
     private EditText mPasswordView;
     private View mProgressView;
-    private View mLoginFormView;
     private Button mLoginSignInButton;
 
     @Override
@@ -97,49 +94,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String login = mLoginView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        boolean cancel = false;
-        View focusView = null;
-
         if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
         }
 
         if (TextUtils.isEmpty(login)) {
             mLoginView.setError(getString(R.string.error_field_required));
-            focusView = mLoginView;
-            cancel = true;
         }
 
-        if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
-            cancel = autenticaUsuario(login, password);
-            if (cancel) {
-                focusView = mLoginView;
-                Toast toast = Toast.makeText(this, getString(R.string.login_invalido), Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-
-        if (cancel) {
-            focusView.requestFocus();
-        } else {
+        else {
             closeKeyboard();
             mLoginSignInButton.setVisibility(View.GONE);
             showProgress(true);
             mAuthTask = new UserLoginTask(login, password);
             mAuthTask.execute((Void) null);
-        }
-    }
-
-    private boolean autenticaUsuario(String login, String senha) {
-
-        Usuario usuario = new Usuario(login, senha).Get(this);
-
-        if (usuario == null) {
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -218,24 +186,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://jithubapi.herokuapp.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            JsonUsuarioApi jsonUsuarioApi = retrofit.create(JsonUsuarioApi.class);
+
+            Call<List<Usuario>> call =  jsonUsuarioApi.getUsuarioPorNome(mEmail);
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                Response<List<Usuario>> response = call.execute();
+
+                List<Usuario> usuarios = response.body();
+
+                if (!usuarios.isEmpty()){
+
+                    Usuario usuario1 = usuarios.get(0);
+
+                    if (usuario1.get_nome().equals(mEmail) && usuario1.get_senha().equals(mPassword)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+
+            } catch (Exception e){
+                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 return false;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
         }
 
         @Override
