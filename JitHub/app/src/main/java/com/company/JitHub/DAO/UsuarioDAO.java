@@ -1,5 +1,6 @@
 package com.company.JitHub.DAO;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,17 +9,17 @@ import com.company.JitHub.Model.Usuario;
 
 public class UsuarioDAO{
 
-    private Context _contexto;
+    private Context _context;
 
     public UsuarioDAO(Context context){
-        _contexto = context;
+        _context = context;
     }
 
     public Usuario GetUsuario(String login, String senha){
 
         String selectQuery = "SELECT * FROM Logins WHERE Senha = '" + senha + "' AND Login = '" + login + "'";
 
-        DatabaseHelper db = new DatabaseHelper(_contexto);
+        DatabaseHelper db = new DatabaseHelper(_context);
         SQLiteDatabase database = db.getWritableDatabase();
 
         Cursor cursor = database.rawQuery(selectQuery, null);
@@ -43,5 +44,17 @@ public class UsuarioDAO{
             database.close();
             return null;
         }
+    }
+
+    public void UpdateUsuario(Usuario usuario){
+        DatabaseHelper databaseHelper = new DatabaseHelper(_context);
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("Senha", usuario.get_senha());
+        sqLiteDatabase.update("Logins",values, "Login = ?", new String[]{String.valueOf(usuario.get_nome())});
+
+        databaseHelper.close();
+        sqLiteDatabase.close();
     }
 }

@@ -24,22 +24,16 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.company.JitHub.DAO.PopulateDatabase;
 import com.company.JitHub.Model.Usuario;
+import com.company.JitHub.Network.Network;
 import com.company.JitHub.R;
-import com.company.JitHub.Retrofit.JsonUsuarioApi;
 
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity {
 
     private UserLoginTask mAuthTask = null;
 
@@ -115,107 +109,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView.setVisibility(exibir ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mLoginView.setAdapter(adapter);
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mLogin;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String login, String password) {
+            mLogin = login;
             mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://jithubapi.herokuapp.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+            Boolean isConnected = new Network().getConnectivity(getApplicationContext());
+            Context context= getApplicationContext();
 
-            JsonUsuarioApi jsonUsuarioApi = retrofit.create(JsonUsuarioApi.class);
-
-            Call<List<Usuario>> call =  jsonUsuarioApi.getUsuarioPorNome(mEmail);
-
-            try {
-                Response<List<Usuario>> response = call.execute();
-
-                List<Usuario> usuarios = response.body();
-
-                if (!usuarios.isEmpty()){
-
-                    Usuario usuario1 = usuarios.get(0);
-
-                    if (usuario1.get_nome().equals(mEmail) && usuario1.get_senha().equals(mPassword)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-
-            } catch (Exception e){
-                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                return false;
+            if (isConnected){
+                return new Usuario(mLogin, mPassword).ValidaUsuarioESenhaNaApi(context);
+            } else {
+                return new Usuario(mLogin, mPassword).ValidaUsuarioESenhaNaBaseInterna(context);
             }
         }
 
@@ -249,7 +162,5 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
-
 }
 
