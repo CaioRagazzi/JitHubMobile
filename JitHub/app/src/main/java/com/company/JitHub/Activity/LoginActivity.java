@@ -79,9 +79,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        PopulateDatabase populate = new PopulateDatabase(this);
-        populate.populate();
-
         mLoginView.setError(null);
         mPasswordView.setError(null);
 
@@ -124,9 +121,23 @@ public class LoginActivity extends AppCompatActivity {
 
             Boolean isConnected = new Network().getConnectivity(getApplicationContext());
             Context context= getApplicationContext();
+            Usuario usuarioLogando = new Usuario(mLogin, mPassword);
 
             if (isConnected){
-                return new Usuario(mLogin, mPassword).ValidaUsuarioESenhaNaApi(context);
+
+                boolean validadoNaApi;
+                validadoNaApi = usuarioLogando.ValidaUsuarioESenhaNaApi(context);
+
+                if (validadoNaApi == true){
+                    Usuario usuarioFromDatabase = usuarioLogando.GetUsuarioFromDatabase(context);
+                    if (usuarioFromDatabase == null){
+                        usuarioLogando.InsereUsuarioNaBaseInterna(context);
+                    } else{
+                        usuarioLogando.AtualizaSenhaUsuarioNaBaseInterna(context);
+                    }
+                }
+
+                return validadoNaApi;
             } else {
                 return new Usuario(mLogin, mPassword).ValidaUsuarioESenhaNaBaseInterna(context);
             }

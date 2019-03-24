@@ -3,7 +3,6 @@ package com.company.JitHub.Model;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.company.JitHub.Activity.LoginActivity;
 import com.company.JitHub.DAO.UsuarioDAO;
 import com.company.JitHub.Retrofit.JsonUsuarioApi;
 import com.google.gson.annotations.SerializedName;
@@ -55,19 +54,23 @@ public class Usuario {
 
     public Usuario GetUsuarioFromDatabase(Context context){
 
-        Usuario usuario = new UsuarioDAO(context).GetUsuario(_nome, _senha);
+        Usuario usuario = new UsuarioDAO(context).GetUsuario(_nome);
 
         return usuario;
     }
 
     public boolean ValidaUsuarioESenhaNaBaseInterna(Context context){
 
-        Usuario usuario = new UsuarioDAO(context).GetUsuario(_nome, _senha);
+        Usuario usuarioFromDataBase = new UsuarioDAO(context).GetUsuario(_nome);
 
-        if (usuario != null){
-            return true;
-        }
-        else{
+        if (usuarioFromDataBase != null){
+            if (usuarioFromDataBase.get_nome().equals(_nome) && usuarioFromDataBase.get_senha().equals(_senha)){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } else {
             return false;
         }
     }
@@ -90,11 +93,9 @@ public class Usuario {
 
             if (!usuarios.isEmpty()){
 
-                Usuario usuario1 = usuarios.get(0);
+                Usuario usuarioFromApi = usuarios.get(0);
 
-                AtualizaSenhaUsuarioNaBaseInterna(usuario1 ,context);
-
-                if (usuario1.get_nome().equals(_nome) && usuario1.get_senha().equals(_senha)) {
+                if (usuarioFromApi.get_nome().equals(_nome) && usuarioFromApi.get_senha().equals(_senha)) {
                     return true;
                 } else {
                     return false;
@@ -108,8 +109,12 @@ public class Usuario {
         }
     }
 
-    public void AtualizaSenhaUsuarioNaBaseInterna(Usuario usuario, Context context){
+    public void AtualizaSenhaUsuarioNaBaseInterna(Context context){
 
-        new UsuarioDAO(context).UpdateUsuario(usuario);
+        new UsuarioDAO(context).UpdateUsuario(this);
+    }
+
+    public void InsereUsuarioNaBaseInterna(Context context){
+        new UsuarioDAO(context).InsertUsuario(this);
     }
 }

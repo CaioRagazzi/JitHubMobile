@@ -15,9 +15,9 @@ public class UsuarioDAO{
         _context = context;
     }
 
-    public Usuario GetUsuario(String login, String senha){
+    public Usuario GetUsuario(String login){
 
-        String selectQuery = "SELECT * FROM Logins WHERE Senha = '" + senha + "' AND Login = '" + login + "'";
+        String selectQuery = "SELECT * FROM Logins WHERE Login = '" + login + "'";
 
         DatabaseHelper db = new DatabaseHelper(_context);
         SQLiteDatabase database = db.getWritableDatabase();
@@ -33,7 +33,7 @@ public class UsuarioDAO{
             db.close();
             database.close();
 
-            if (senha.equals(senhaRetorno) && login.equals(nomeRetorno)){
+            if (nomeRetorno != null){
                 Usuario usuario = new Usuario(nomeRetorno, senhaRetorno);
                 return usuario;
             } else {
@@ -56,5 +56,21 @@ public class UsuarioDAO{
 
         databaseHelper.close();
         sqLiteDatabase.close();
+    }
+
+    public void InsertUsuario(Usuario usuario){
+        DatabaseHelper databaseHelper = new DatabaseHelper(_context);
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("Login", usuario.get_nome());
+        values.put("senha", usuario.get_senha());
+        values.put("email", usuario.get_email());
+        values.put("grupo", usuario.get_grupo());
+        sqLiteDatabase.insert("Logins",null,values);
+
+        databaseHelper.close();
+        sqLiteDatabase.close();
+
     }
 }

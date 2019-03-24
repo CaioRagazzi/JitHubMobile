@@ -12,6 +12,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final String colLoginID = "LoginID";
     static final String colLogin = "Login";
     static final String colSenha = "Senha";
+    static final String colGrupo = "Grupo";
+    static final String colEmail = "Email";
+
 
 
     public DatabaseHelper(Context context){
@@ -21,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("CREATE TABLE "+loginTable+" ("+colLoginID+ " INTEGER PRIMARY KEY , "+colLogin+ " TEXT , "+colSenha+" TEXT)");
+        db.execSQL("CREATE TABLE "+loginTable+" ("+colLoginID+ " INTEGER PRIMARY KEY , "+colLogin+ " TEXT , "+colSenha+" TEXT, "+colGrupo+" TEXT, "+colEmail+" TEXT)");
 
     }
 
