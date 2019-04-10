@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent myIntent = new Intent(LoginActivity.this, PrincipalActivity.class);
                 LoginActivity.this.startActivity(myIntent);
                 finish();
             } else {

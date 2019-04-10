@@ -24,10 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Activity.InventarioActivity"></activity>
+        <activity android:name="com.company.project.InventarioActivity" />
+        <activity android:name=".Activity.PrincipalActivity" />
         <activity
             android:name=".Activity.FormActivity"
-            android:label="Formulário">
-        </activity>
+            android:label="Formulário" />
         <activity android:name=".Activity.MainActivity" />
         <activity
             android:name=".Activity.LoginActivity"
