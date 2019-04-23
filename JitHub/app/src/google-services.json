@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "373189356168",
+    "firebase_url": "https://jithub.firebaseio.com",
+    "project_id": "jithub",
+    "storage_bucket": "jithub.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373189356168:android:add8a61d82db6ea6",
+        "android_client_info": {
+          "package_name": "com.company.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "373189356168-pi8khftp9k85h1mavhb95rkdqln4t5vt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLGSPuZYGxQWZhQwY8eYXqEFymiT-aj9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "373189356168-pi8khftp9k85h1mavhb95rkdqln4t5vt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

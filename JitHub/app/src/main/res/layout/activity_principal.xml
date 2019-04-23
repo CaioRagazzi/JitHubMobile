@@ -6,24 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.company.JitHub.Activity.PrincipalActivity">
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <RelativeLayout
-            android:id="@+id/container_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include layout="@layout/toolbar" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
+    <include layout="@layout/toolbar" />
 
     <Button
         android:id="@+id/button2"
