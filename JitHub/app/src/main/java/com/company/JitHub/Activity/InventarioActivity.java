@@ -1,6 +1,8 @@
 package com.company.JitHub.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -8,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,6 +26,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -48,7 +53,6 @@ public class InventarioActivity extends AppCompatActivity {
     int position = 0;
     String documentoAtual;
 
-    LinearLayout ll = null;
     TextInputLayout ti = null;
     LinearLayout lm = null;
 
@@ -65,6 +69,8 @@ public class InventarioActivity extends AppCompatActivity {
         position = 0;
 
         lm.removeAllViews();
+
+        Activity activity = new FragmentActivity();
 
         db.collection("Nivel1")
                 .get()
@@ -99,12 +105,9 @@ public class InventarioActivity extends AppCompatActivity {
                                 lm.addView(btn);
 
                             }
-
-//                            lm.addView(ll);
                         } else {
                             Log.d("tagerr", "Error getting documents: ", task.getException());
                         }
-
                     }
                 });
     }
@@ -139,8 +142,6 @@ public class InventarioActivity extends AppCompatActivity {
                                 lm.addView(btn);
 
                             }
-
-//                            lm.addView(ll);
                         } else {
                             Log.d("tagerr", "Error getting documents: ", task.getException());
                         }
@@ -148,15 +149,9 @@ public class InventarioActivity extends AppCompatActivity {
                 });
     }
 
-    private void getPerguntas(String collection,String document){
+    private void getPerguntas(final String collection, String document){
 
         lm.removeAllViews();
-
-        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-        lm.removeView(ll);
-        ll.removeAllViews();
 
         db.collection(collection)
                 .document(document)
@@ -167,7 +162,7 @@ public class InventarioActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            DocumentSnapshot document = task.getResult();
+                            final DocumentSnapshot document = task.getResult();
                             Map<String, Object> data = document.getData();
 
                             for (Map.Entry<String, Object> d:
@@ -179,7 +174,6 @@ public class InventarioActivity extends AppCompatActivity {
 
                                     TextInputEditText editText = new TextInputEditText(InventarioActivity.this);
                                     editText.setHint(nome.toString());
-                                    editText.setLayoutParams(params);
                                     editText.setVisibility(View.VISIBLE);
 
                                     ti.addView(editText);
@@ -189,8 +183,6 @@ public class InventarioActivity extends AppCompatActivity {
                             }
 
                             Button button = new Button(InventarioActivity.this);
-                            button.setLayoutParams(params);
-                            button.setHeight(30);
                             button.setText("Enviar");
                             button.setVisibility(View.VISIBLE);
 
@@ -200,6 +192,7 @@ public class InventarioActivity extends AppCompatActivity {
                                 public void onClick(View v) {
 
                                     Map<String, Object> resposta = new HashMap<>();
+                                    resposta.put("reference",document.getReference());
                                     int childCount = lm.getChildCount();
                                     for (int i = 0; i < childCount; i++){
                                         View view = lm.getChildAt(i);
@@ -225,32 +218,31 @@ public class InventarioActivity extends AppCompatActivity {
                                             }
                                         }
                                     }
-
                                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
                                     LocalDateTime now = LocalDateTime.now();
 
-                                    db.collection("respostas")
+                                    db.collection("Respostas")
                                             .document(dtf.format(now))
                                             .set(resposta)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(InventarioActivity.this, "Formulário salvo com sucesso!", Toast.LENGTH_SHORT).show();
                                                     Log.d("Add", "DocumentSnapshot successfully written!");
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(InventarioActivity.this, "Problema ao salvar formulário!", Toast.LENGTH_SHORT).show();
                                                     Log.w("Err", "Error writing document", e);
                                                 }
                                             });
+
+                                    ListaNivel1();
                                 }
                             });
-
                             lm.addView(button);
-
-//                            lm.addView(ll);
-
                         } else {
                             Log.d("tagerr", "Error getting documents: ", task.getException());
                         }
@@ -280,11 +272,6 @@ public class InventarioActivity extends AppCompatActivity {
                     lm.removeView(childAt);
                 }
             }
-
-//            lm.removeView(ll);
-//            lm.removeView(ti);
-//            ll.removeAllViews();
-//            ti.removeAllViews();
             ListaNivel1();
         } else if (position == 3) {
             int childCount = lm.getChildCount();
@@ -294,21 +281,13 @@ public class InventarioActivity extends AppCompatActivity {
                     lm.removeView(childAt);
                 }
             }
-
-//            lm.removeView(ll);
-//            lm.removeView(ti);
-//            ll.removeAllViews();
-//            ti.removeAllViews();
             ListaNivel2(documentoAtual);
         }
     }
 
     private void InstanciaLl(){
-        ll = new LinearLayout(InventarioActivity.this);
-        ll.setOrientation(LinearLayout.VERTICAL);
-
         ti = new TextInputLayout(InventarioActivity.this);
-
         lm = findViewById(R.id.linearMain);
+        lm.setPadding(16,16,16,16);
     }
 }
