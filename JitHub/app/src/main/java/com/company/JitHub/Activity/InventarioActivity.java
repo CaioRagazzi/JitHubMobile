@@ -44,7 +44,6 @@ import java.util.Map;
 public class InventarioActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String documentoAtual;
 
     TextInputLayout ti = null;
     LinearLayout lm = null;
@@ -61,8 +60,6 @@ public class InventarioActivity extends AppCompatActivity {
     private void ListaNivel1() {
 
         lm.removeAllViews();
-
-        Activity activity = new FragmentActivity();
 
         db.collection("Nivel1")
                 .get()
