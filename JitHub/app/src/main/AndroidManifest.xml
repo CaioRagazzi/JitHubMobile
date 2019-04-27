@@ -24,7 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activity.InventarioActivity"></activity>
+        <activity android:name=".Activity.PerguntasActivity"></activity>
+        <activity android:name=".Activity.InventarioActivity" />
         <activity android:name="com.company.project.InventarioActivity" />
         <activity android:name=".Activity.PrincipalActivity" />
         <activity

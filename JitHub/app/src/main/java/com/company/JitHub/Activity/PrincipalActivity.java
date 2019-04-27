@@ -36,4 +36,9 @@ public class PrincipalActivity extends AppCompatActivity {
                 PrincipalActivity.this.startActivity(myIntent);            }
         });
     }
+
+    @Override
+    public void onBackPressed(){
+        moveTaskToBack(true);
+    }
 }
