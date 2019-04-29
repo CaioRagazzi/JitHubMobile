@@ -111,11 +111,12 @@ public class LoginActivity extends AppCompatActivity {
                                 showLoginButton(true);
                             }
                         } else {
+                            Toast.makeText(LoginActivity.this, "Login não encontrado!", Toast.LENGTH_SHORT).show();
                             showProgress(false);
                             showLoginButton(true);
-                            Toast.makeText(LoginActivity.this, "Login não encontrado!", Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        Toast.makeText(LoginActivity.this, "Erro ao efetuar login!", Toast.LENGTH_SHORT).show();
                         Log.d("LOGGGGEERRRR", "FALHA", task.getException());
                         showProgress(false);
                         showLoginButton(true);

@@ -1,15 +1,8 @@
 package com.company.JitHub.Activity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
-
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,28 +10,14 @@ import android.util.Log;
 import android.view.View;
 
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.company.JitHub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class InventarioActivity extends AppCompatActivity {
@@ -82,7 +61,6 @@ public class InventarioActivity extends AppCompatActivity {
                                             myIntent.putExtra("documento", document.getReference().getPath());
                                             myIntent.putExtra("nivel", 2);
                                             InventarioActivity.this.startActivity(myIntent);
-//                                            ListaNivel2(document.getId());
                                         }
                                     });
                                 } else {
@@ -93,7 +71,6 @@ public class InventarioActivity extends AppCompatActivity {
                                             myIntent.putExtra("collection", "Nivel1");
                                             myIntent.putExtra("document", document.getId());
                                             InventarioActivity.this.startActivity(myIntent);
-//                                            getPerguntas("Nivel1", document.getId());
                                         }
                                     });
                                 }
@@ -107,108 +84,6 @@ public class InventarioActivity extends AppCompatActivity {
                     }
                 });
     }
-
-//    private void getPerguntas(final String collection, String document){
-//
-//        lm.removeAllViews();
-//
-//        db.collection(collection)
-//                .document(document)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @SuppressLint("ResourceType")
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//
-//                            final DocumentSnapshot document = task.getResult();
-//                            Map<String, Object> data = document.getData();
-//
-//                            for (Map.Entry<String, Object> d:
-//                                    data.entrySet()) {
-//
-//                                Object nome = d.getKey();
-//
-//                                if (nome != null) {
-//
-//                                    TextInputEditText editText = new TextInputEditText(InventarioActivity.this);
-//                                    editText.setHint(nome.toString());
-//                                    editText.setVisibility(View.VISIBLE);
-//
-//                                    ti.addView(editText);
-//                                    lm.addView(ti);
-//                                    ti = new TextInputLayout(InventarioActivity.this);
-//                                }
-//                            }
-//
-//                            Button button = new Button(InventarioActivity.this);
-//                            button.setText("Enviar");
-//                            button.setVisibility(View.VISIBLE);
-//
-//                            button.setOnClickListener(new View.OnClickListener() {
-//                                @RequiresApi(api = Build.VERSION_CODES.O)
-//                                @Override
-//                                public void onClick(View v) {
-//
-//                                    Map<String, Object> resposta = new HashMap<>();
-//                                    resposta.put("reference",document.getReference());
-//                                    int childCount = lm.getChildCount();
-//                                    for (int i = 0; i < childCount; i++){
-//                                        View view = lm.getChildAt(i);
-//                                        if (view instanceof TextInputLayout){
-//
-//                                            int childCount1 = ((TextInputLayout) view).getChildCount();
-//                                            for (int o = 0; o<childCount1; o++){
-//                                                View view2 = ((TextInputLayout) view).getChildAt(o);
-//                                                if (view2 instanceof FrameLayout){
-//
-//                                                    int childCount2 = ((FrameLayout) view2).getChildCount();
-//                                                    for (int p = 0; p<childCount2; p++){
-//                                                        View childAt = ((FrameLayout) view2).getChildAt(p);
-//                                                        if (childAt instanceof EditText){
-//
-//                                                            String s1 = ((TextInputLayout) view).getHint().toString();
-//                                                            String s = ((EditText) childAt).getText().toString();
-//
-//                                                            resposta.put(s1, s);
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-//                                    LocalDateTime now = LocalDateTime.now();
-//
-//                                    db.collection("Respostas")
-//                                            .document(dtf.format(now))
-//                                            .set(resposta)
-//                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                @Override
-//                                                public void onSuccess(Void aVoid) {
-//                                                    Toast.makeText(InventarioActivity.this, "Formulário salvo com sucesso!", Toast.LENGTH_SHORT).show();
-//                                                    Log.d("Add", "DocumentSnapshot successfully written!");
-//                                                }
-//                                            })
-//                                            .addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(@NonNull Exception e) {
-//                                                    Toast.makeText(InventarioActivity.this, "Problema ao salvar formulário!", Toast.LENGTH_SHORT).show();
-//                                                    Log.w("Err", "Error writing document", e);
-//                                                }
-//                                            });
-//
-//                                    ListaNivel1();
-//                                }
-//                            });
-//                            lm.addView(button);
-//                        } else {
-//                            Log.d("tagerr", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//
-//    }
 
     private void InstanciaLl(){
         ti = new TextInputLayout(InventarioActivity.this);
