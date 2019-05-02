@@ -45,8 +45,6 @@ public class PerguntasActivity extends AppCompatActivity {
 
                                 if (document.getData().isEmpty()){
 
-                                    DocumentReference reference = document.getReference();
-
                                     btn.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {

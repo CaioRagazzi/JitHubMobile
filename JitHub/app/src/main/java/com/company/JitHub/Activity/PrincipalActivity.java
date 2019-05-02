@@ -35,6 +35,15 @@ public class PrincipalActivity extends AppCompatActivity {
                 Intent myIntent = new Intent(PrincipalActivity.this, InventarioActivity.class);
                 PrincipalActivity.this.startActivity(myIntent);            }
         });
+
+        Button botaoQr = findViewById(R.id.buttonScan);
+        botaoQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(PrincipalActivity.this, ScanActivity.class);
+                PrincipalActivity.this.startActivity(myIntent);
+            }
+        });
     }
 
     @Override
