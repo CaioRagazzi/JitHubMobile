@@ -21,6 +21,9 @@ import android.widget.Toast;
 import com.company.JitHub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,12 +34,23 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private View mProgressView;
     private Button mLoginSignInButton;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+//        if (currentUser.i != null){
+//            FirebaseUser user = mAuth.getCurrentUser();
+//            Intent myIntent = new Intent(LoginActivity.this, PrincipalActivity.class);
+//            LoginActivity.this.startActivity(myIntent);
+//            finish();
+//        }
 
         mLoginView = findViewById(R.id.login);
 
@@ -86,8 +100,31 @@ public class LoginActivity extends AppCompatActivity {
             closeKeyboard();
             showLoginButton(false);
             showProgress(true);
-            UserLoginTask(login, password);
+//            UserLoginTask(login, password);
+            LogaUsuario(login, password);
         }
+    }
+
+    private void LogaUsuario(String login, String password){
+
+        String userLogin = login + "@dominio.com.br";
+
+        mAuth.signInWithEmailAndPassword(userLogin, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Intent myIntent = new Intent(LoginActivity.this, PrincipalActivity.class);
+                            LoginActivity.this.startActivity(myIntent);
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            showProgress(false);
+                            showLoginButton(true);
+                        }
+                    }
+                });
     }
 
     private void UserLoginTask(String login, final String password){
