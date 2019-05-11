@@ -5,24 +5,33 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.company.JitHub.Adapter.ImageAdapter;
 import com.company.JitHub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,11 +49,18 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -52,8 +68,14 @@ public class FormActivity extends AppCompatActivity {
 
 
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    static final int REQUEST_TAKE_PHOTO = 1;
     TextInputLayout ti;
     LinearLayout lm;
+    GridView grid;
+    private String[] mCurrentPhotoPath = new String[10];
+    List<File> files = new ArrayList<>();
+    Integer contador = 0;
+    Integer contImages = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -122,6 +144,11 @@ public class FormActivity extends AppCompatActivity {
 
                                     //QR CODE!!!!
                                     GravarQRCode("Respostas/" + dateNow, dateNow);
+                                    try {
+                                        GravaImagens(mCurrentPhotoPath, dateNow);
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     db.collection("Respostas")
                                             .document(dateNow)
@@ -154,7 +181,13 @@ public class FormActivity extends AppCompatActivity {
                 });
     }
 
-    private void GravarQRCode(String reference, String filName) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        grid.setAdapter(new ImageAdapter(FormActivity.this, mCurrentPhotoPath));
+    }
+
+    private void GravarQRCode(String reference, String fileName) {
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         Bitmap bitmap = null;
@@ -168,7 +201,7 @@ public class FormActivity extends AppCompatActivity {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference qrcodeRef = storageRef.child(filName + ".jpg");
+        StorageReference qrcodeRef = storageRef.child(fileName + ".jpg");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -186,9 +219,40 @@ public class FormActivity extends AppCompatActivity {
         });
     }
 
+    private void GravaImagens(String[] imagens, String folderName) throws FileNotFoundException {
+
+        for (String img: imagens) {
+            if (img == null){
+                return;
+            }
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+
+            StorageReference imgRef = storageRef.child(folderName + "/" + contImages);
+            contImages++;
+
+            InputStream stream = new FileInputStream(new File(img));
+
+            UploadTask uploadTask = imgRef.putStream(stream);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(FormActivity.this, "DEU PAU!", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(FormActivity.this, "MANDOU BEM!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     private void InstanciaLayout() {
         ti = new TextInputLayout(FormActivity.this);
         lm = findViewById(R.id.formsMain);
+        grid = new GridView(FormActivity.this);
+
     }
 
     private void ListaPergunta(String reference) {
@@ -265,6 +329,50 @@ public class FormActivity extends AppCompatActivity {
                                 lm.addView(ti, 0);
                                 ti = new TextInputLayout(FormActivity.this);
                                 break;
+                            case "camera":
+                                Button btn = new Button(FormActivity.this);
+                                btn.setText("Adicionar foto");
+                                btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        // Ensure that there's a camera activity to handle the intent
+                                        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                                            // Create the File where the photo should go
+                                            File photoFile = null;
+                                            try {
+                                                photoFile = createImageFile();
+                                            } catch (IOException ex) {
+                                                //TODO Adicionar algo aqui!
+                                            }
+                                            // Continue only if the File was successfully created
+                                            if (photoFile != null) {
+                                                Uri photoURI = FileProvider.getUriForFile(FormActivity.this, "com.company.JitHub", photoFile);
+                                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                                            }
+                                        }
+                                    }
+                                });
+
+                                Display display = FormActivity.this.getWindowManager().getDefaultDisplay();
+                                DisplayMetrics displayMetrics = new DisplayMetrics();
+                                display.getMetrics(displayMetrics);
+
+                                int width = display.getWidth();
+                                int height = display.getHeight();
+
+                                grid.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+                                grid.setBackgroundColor(Color.WHITE);
+                                grid.setNumColumns(4);
+                                grid.setColumnWidth(50);
+                                grid.setVerticalSpacing(5);
+                                grid.setHorizontalSpacing(5);
+                                grid.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+//                                grid.setGravity();
+                                lm.addView(btn, 1);
+                                lm.addView(grid);
+                                break;
                             default:
                                 break;
                         }
@@ -282,6 +390,24 @@ public class FormActivity extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+
+        );
+
+        files.add(image);
+        mCurrentPhotoPath[contador] = image.getAbsolutePath();
+        contador++;
+        return image;
     }
 }
 
