@@ -1,11 +1,16 @@
 package com.company.JitHub.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -20,19 +25,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.company.JitHub.Adapter.ImageAdapter;
 import com.company.JitHub.R;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +69,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,12 +87,10 @@ public class FormActivity extends AppCompatActivity {
     TextInputLayout ti;
     LinearLayout lm;
     GridView grid;
-    private String[] mCurrentPhotoPath = new String[10];
-    List<File> files = new ArrayList<>();
-    Integer contador = 0;
+    private List<String> mCurrentPhotoPath = new ArrayList<>();
     Integer contImages = 1;
+    ImageAdapter imageAdapter;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +116,10 @@ public class FormActivity extends AppCompatActivity {
                             for (Map.Entry<String, Object> d:
                                     data.entrySet()) {
 
-                                Object nome = d.getKey();
+                                if (d.getKey().equals("collection")){
+                                    continue;
+                                }
+
                                 Object value =  d.getValue();
 
                                 if (value != null) {
@@ -130,6 +146,12 @@ public class FormActivity extends AppCompatActivity {
                                         if (view instanceof TextInputLayout) {
 
                                             EditText editText = ((TextInputLayout) view).getEditText();
+
+                                            if (editText.getText().toString().isEmpty()){
+                                                editText.setError("Campo obrigatório");
+                                                editText.requestFocus();
+                                                return;
+                                            }
 
                                             String s1 = ((TextInputLayout) view).getHint().toString();
                                             String s = editText.getText().toString();
@@ -184,7 +206,8 @@ public class FormActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        grid.setAdapter(new ImageAdapter(FormActivity.this, mCurrentPhotoPath));
+        imageAdapter = new ImageAdapter(FormActivity.this, mCurrentPhotoPath);
+        grid.setAdapter(imageAdapter);
     }
 
     private void GravarQRCode(String reference, String fileName) {
@@ -201,7 +224,7 @@ public class FormActivity extends AppCompatActivity {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference qrcodeRef = storageRef.child(fileName + ".jpg");
+        StorageReference qrcodeRef = storageRef.child(fileName + "/" + "QRCode.jpg");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -219,7 +242,11 @@ public class FormActivity extends AppCompatActivity {
         });
     }
 
-    private void GravaImagens(String[] imagens, String folderName) throws FileNotFoundException {
+    private void GravaImagens(List<String> imagens, String folderName) throws FileNotFoundException {
+
+        if (imagens == null){
+            return;
+        }
 
         for (String img: imagens) {
             if (img == null){
@@ -260,6 +287,7 @@ public class FormActivity extends AppCompatActivity {
         db.document(reference)
             .get()
             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()){
@@ -369,7 +397,48 @@ public class FormActivity extends AppCompatActivity {
                                 grid.setVerticalSpacing(5);
                                 grid.setHorizontalSpacing(5);
                                 grid.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-//                                grid.setGravity();
+
+                                grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        AlertDialog.Builder ImageDialog = new AlertDialog.Builder(FormActivity.this);
+                                        ImageView showImage = new ImageView(FormActivity.this);
+                                        showImage.setImageURI(Uri.parse(mCurrentPhotoPath.get(position)));
+                                        ImageDialog.setView(showImage);
+
+                                        ImageDialog.setNegativeButton("ok", new DialogInterface.OnClickListener()
+                                        {
+                                            public void onClick(DialogInterface arg0, int arg1)
+                                            {
+                                            }
+                                        });
+                                        ImageDialog.show();
+                                    }
+                                });
+
+                                grid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                    @Override
+                                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(FormActivity.this);
+                                        builder.setMessage("Deseja realmente remover essa imagem?")
+                                                .setTitle("Remover imagem!")
+                                                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        mCurrentPhotoPath.remove(position);
+                                                        imageAdapter.notifyDataSetChanged();
+                                                    }
+                                                })
+                                                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                    }
+                                                });
+                                        builder.show();
+                                        return true;
+                                    }
+                                });
+
                                 lm.addView(btn, 1);
                                 lm.addView(grid);
                                 break;
@@ -404,9 +473,7 @@ public class FormActivity extends AppCompatActivity {
 
         );
 
-        files.add(image);
-        mCurrentPhotoPath[contador] = image.getAbsolutePath();
-        contador++;
+        mCurrentPhotoPath.add(image.getAbsolutePath());
         return image;
     }
 }

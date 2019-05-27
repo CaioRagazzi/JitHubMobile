@@ -15,9 +15,13 @@ import android.widget.LinearLayout;
 import com.company.JitHub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
+import java.util.Map;
 
 
 public class InventarioActivity extends AppCompatActivity {
@@ -47,12 +51,17 @@ public class InventarioActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
+                            Log.d("tagerr", task.getResult().toString(), task.getException());
+
                             for (final QueryDocumentSnapshot document : task.getResult()) {
                                 Button btn = new Button(InventarioActivity.this);
                                 btn.setText(document.getId());
 
+                                Map<String, Object> data = document.getData();
+                                String key = data.entrySet().iterator().next().getKey();
 
-                                if (document.getData().isEmpty()) {
+//                                if (document.getData().isEmpty()) {
+                                if (data.size() == 1 && key.equals("collection")) {
 
                                     btn.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -63,7 +72,9 @@ public class InventarioActivity extends AppCompatActivity {
                                             InventarioActivity.this.startActivity(myIntent);
                                         }
                                     });
+
                                 } else {
+
                                     btn.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -73,6 +84,7 @@ public class InventarioActivity extends AppCompatActivity {
                                             InventarioActivity.this.startActivity(myIntent);
                                         }
                                     });
+
                                 }
 
                                 lm.addView(btn);

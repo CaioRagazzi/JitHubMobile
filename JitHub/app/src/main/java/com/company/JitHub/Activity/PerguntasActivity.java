@@ -17,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Map;
+
 public class PerguntasActivity extends AppCompatActivity {
 
     @Override
@@ -31,7 +33,7 @@ public class PerguntasActivity extends AppCompatActivity {
         final String documento = getIntent().getStringExtra("documento");
         final int nivel = getIntent().getIntExtra("nivel", 0);
 
-        final String collection = documento.concat("/Nivel" + nivel);
+        final String collection = documento.concat("/Nivel");
 
         db.collection(collection)
                 .get()
@@ -43,7 +45,10 @@ public class PerguntasActivity extends AppCompatActivity {
                                 Button btn = new Button(PerguntasActivity.this);
                                 btn.setText(document.getId());
 
-                                if (document.getData().isEmpty()){
+                                Map<String, Object> data = document.getData();
+                                String key = data.entrySet().iterator().next().getKey();
+
+                                if (data.size() == 1 && key.equals("collection")){
 
                                     btn.setOnClickListener(new View.OnClickListener() {
                                         @Override

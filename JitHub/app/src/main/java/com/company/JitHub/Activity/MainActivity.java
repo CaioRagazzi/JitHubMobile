@@ -21,12 +21,14 @@ import com.company.JitHub.R;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
     static final int REQUEST_TAKE_PHOTO = 1;
-    private String[] filesPaths;
+    private List<String> filesPaths;
     private GridView grid;
 
     @Override
@@ -114,10 +116,10 @@ public class MainActivity extends BaseActivity {
         File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         File[] files = directory.listFiles();
-        filesPaths = new String[files.length];
+        filesPaths = new ArrayList<>();
 
         for (int i = 0; i < files.length; i++) {
-            filesPaths[i] = files[i].getAbsolutePath();
+            filesPaths.add(files[i].getAbsolutePath());
         }
     }
 }

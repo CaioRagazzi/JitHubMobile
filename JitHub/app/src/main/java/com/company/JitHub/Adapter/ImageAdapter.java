@@ -11,19 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.company.JitHub.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private Context context;
-    String[] mfilesPaths;
+    List<String> mfilesPaths;
 
-    public ImageAdapter(Context context, String[] filesPath) {
+    public ImageAdapter(Context context, List<String> filesPath) {
         this.context = context;
         mfilesPaths = filesPath;
         inflater = LayoutInflater.from(context);
@@ -32,13 +34,13 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public int getCount() {
 
-        return mfilesPaths.length;
+        return mfilesPaths.size();
     }
 
     @Override
     public Object getItem(int position) {
 
-        return null;
+        return position;
     }
 
     @Override
@@ -63,13 +65,13 @@ public class ImageAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        String url = mfilesPaths[position];
+        String url = mfilesPaths.get(position);
 
-            Picasso.get()
-                    .load("file://" + url)
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .fit()
-                    .into(holder.imageView);
+        Picasso.get()
+                .load("file://" + url)
+                .placeholder(R.drawable.ic_launcher_background)
+                .fit()
+                .into(holder.imageView);
 
         return view;
     }
