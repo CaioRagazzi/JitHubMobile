@@ -42,6 +42,11 @@ public class PerguntasActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()){
                             for (final QueryDocumentSnapshot document : task.getResult()) {
+
+                                if (document.getId().equals("zero")){
+                                    continue;
+                                }
+
                                 Button btn = new Button(PerguntasActivity.this);
                                 btn.setText(document.getId());
 

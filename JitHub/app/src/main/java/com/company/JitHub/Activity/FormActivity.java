@@ -160,6 +160,8 @@ public class FormActivity extends AppCompatActivity {
                                         }
                                     }
 
+                                    Log.d("tagerr", resposta.toString());
+
                                     DateFormat dtf = new SimpleDateFormat("yyyyMMddHHmmss");
                                     Date now = new Date();
                                     String dateNow = dtf.format(now);
@@ -180,6 +182,7 @@ public class FormActivity extends AppCompatActivity {
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(FormActivity.this, "Formulário salvo com sucesso!", Toast.LENGTH_SHORT).show();
                                                     Log.d("Add", "DocumentSnapshot successfully written!");
+
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -283,7 +286,7 @@ public class FormActivity extends AppCompatActivity {
     }
 
     private void ListaPergunta(String reference) {
-
+        Log.d("tagerr", reference);
         db.document(reference)
             .get()
             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

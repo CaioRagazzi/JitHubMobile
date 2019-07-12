@@ -133,7 +133,10 @@ public class ScanActivity extends AppCompatActivity {
                             for (Map.Entry<String, Object> d:
                                     data.entrySet()) {
 
-                                Object nome = d.getKey();
+                                if (d.getKey().equals("collection")){
+                                    continue;
+                                }
+
                                 Object value =  d.getValue();
 
                                 if (value != null) {
@@ -200,91 +203,91 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private void ListaPergunta(String reference) {
-
+        Log.d("tagerr", reference);
         db.document(reference)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
 
-                            DocumentSnapshot result = task.getResult();
+                        DocumentSnapshot result = task.getResult();
 
-                            Map<String, Object> data = result.getData();
+                        Map<String, Object> data = result.getData();
 
-                            Object pergunta = data.get("pergunta");
-                            Object tipo = data.get("tipo");
+                        Object pergunta = data.get("pergunta");
+                        Object tipo = data.get("tipo");
 
-                            switch (tipo.toString()){
-                                case "text":
-                                    TextInputEditText editText = new TextInputEditText(ScanActivity.this);
-                                    editText.setHint(pergunta.toString());
-                                    editText.setVisibility(View.VISIBLE);
-                                    editText.setText(mapData.get(pergunta.toString()).toString());
+                        switch (tipo.toString()){
+                            case "text":
+                                TextInputEditText editText = new TextInputEditText(ScanActivity.this);
+                                editText.setHint(pergunta.toString());
+                                editText.setVisibility(View.VISIBLE);
+                                editText.setText(mapData.get(pergunta.toString()).toString());
 
-                                    ti.addView(editText);
-                                    lm.addView(ti, 0);
-                                    ti = new TextInputLayout(ScanActivity.this);
-                                    break;
-                                case "number":
-                                    TextInputEditText numberEditText = new TextInputEditText(ScanActivity.this);
-                                    numberEditText.setHint(pergunta.toString());
-                                    numberEditText.setVisibility(View.VISIBLE);
-                                    numberEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                    numberEditText.setLongClickable(false);
-                                    numberEditText.setText(mapData.get(pergunta.toString()).toString());
+                                ti.addView(editText);
+                                lm.addView(ti, 0);
+                                ti = new TextInputLayout(ScanActivity.this);
+                                break;
+                            case "number":
+                                TextInputEditText numberEditText = new TextInputEditText(ScanActivity.this);
+                                numberEditText.setHint(pergunta.toString());
+                                numberEditText.setVisibility(View.VISIBLE);
+                                numberEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                                numberEditText.setLongClickable(false);
+                                numberEditText.setText(mapData.get(pergunta.toString()).toString());
 
-                                    ti.addView(numberEditText);
-                                    lm.addView(ti, 0);
-                                    ti = new TextInputLayout(ScanActivity.this);
-                                    break;
-                                case "date":
-                                    final TextInputEditText dateEditText = new TextInputEditText(ScanActivity.this);
-                                    dateEditText.setHint(pergunta.toString());
-                                    dateEditText.setVisibility(View.VISIBLE);
-                                    dateEditText.setFocusable(false);
-                                    dateEditText.setLongClickable(false);
-                                    dateEditText.setText(mapData.get(pergunta.toString()).toString());
+                                ti.addView(numberEditText);
+                                lm.addView(ti, 0);
+                                ti = new TextInputLayout(ScanActivity.this);
+                                break;
+                            case "date":
+                                final TextInputEditText dateEditText = new TextInputEditText(ScanActivity.this);
+                                dateEditText.setHint(pergunta.toString());
+                                dateEditText.setVisibility(View.VISIBLE);
+                                dateEditText.setFocusable(false);
+                                dateEditText.setLongClickable(false);
+                                dateEditText.setText(mapData.get(pergunta.toString()).toString());
 
-                                    final Calendar myCalendar = Calendar.getInstance();
+                                final Calendar myCalendar = Calendar.getInstance();
 
-                                    final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-                                        @Override
-                                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                            myCalendar.set(Calendar.YEAR, year);
-                                            myCalendar.set(Calendar.MONTH, month);
-                                            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                        myCalendar.set(Calendar.YEAR, year);
+                                        myCalendar.set(Calendar.MONTH, month);
+                                        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                                            Locale myLocale = new Locale("pt", "BR");
-                                            String myFormat = "dd/MM/yy"; //In which you need put here
-                                            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, myLocale);
+                                        Locale myLocale = new Locale("pt", "BR");
+                                        String myFormat = "dd/MM/yy"; //In which you need put here
+                                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, myLocale);
 
-                                            dateEditText.setText(sdf.format(myCalendar.getTime()));
-                                        }
-                                    };
+                                        dateEditText.setText(sdf.format(myCalendar.getTime()));
+                                    }
+                                };
 
-                                    dateEditText.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            closeKeyboard();
-                                            new DatePickerDialog(ScanActivity.this, date, myCalendar
-                                                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-                                        }
-                                    });
+                                dateEditText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        closeKeyboard();
+                                        new DatePickerDialog(ScanActivity.this, date, myCalendar
+                                                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                                    }
+                                });
 
-                                    ti.addView(dateEditText);
-                                    lm.addView(ti, 0);
-                                    ti = new TextInputLayout(ScanActivity.this);
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                        } else {
-                            Log.d("tagerr", "Error getting documents: ", task.getException());
+                                ti.addView(dateEditText);
+                                lm.addView(ti, 0);
+                                ti = new TextInputLayout(ScanActivity.this);
+                                break;
+                            default:
+                                break;
                         }
+
+                    } else {
+                        Log.d("tagerr", "Error getting documents: ", task.getException());
                     }
-                });
+                }
+            });
     }
 
     private void InstanciaLayout() {
