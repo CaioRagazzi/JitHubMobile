@@ -71,6 +71,7 @@ public class PerguntasActivity extends AppCompatActivity {
                                             Intent myIntent = new Intent(PerguntasActivity.this, FormActivity.class);
                                             myIntent.putExtra("collection", collection);
                                             myIntent.putExtra("document", document.getId());
+                                            myIntent.putExtra("path", document.getReference().getPath());
                                             PerguntasActivity.this.startActivity(myIntent);
                                         }
                                     });

@@ -81,6 +81,7 @@ public class InventarioActivity extends AppCompatActivity {
                                             Intent myIntent = new Intent(InventarioActivity.this, FormActivity.class);
                                             myIntent.putExtra("collection", "Nivel1");
                                             myIntent.putExtra("document", document.getId());
+                                            myIntent.putExtra("path", document.getReference().getPath());
                                             InventarioActivity.this.startActivity(myIntent);
                                         }
                                     });

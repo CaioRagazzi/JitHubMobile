@@ -61,6 +61,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -116,6 +117,7 @@ public class FormActivity extends AppCompatActivity {
 
         final String collection = getIntent().getStringExtra("collection");
         final String documentReference = getIntent().getStringExtra("document");
+        final String pathDocument = getIntent().getStringExtra("path");
 
         db.collection(collection)
                 .document(documentReference)
@@ -180,7 +182,7 @@ public class FormActivity extends AppCompatActivity {
 
                                     DateFormat dtf = new SimpleDateFormat("yyyyMMddHHmmss");
                                     Date now = new Date();
-                                    String dateNow = dtf.format(now);
+                                    final String dateNow = dtf.format(now);
 
                                     //QR CODE!!!!
                                     GravarQRCode("Respostas/" + dateNow, dateNow);
@@ -203,60 +205,57 @@ public class FormActivity extends AppCompatActivity {
                                                         }
                                                     }
 
+                                                    newMap.put("id", dateNow);
+                                                    newMap.put("docreference", documentReference);
+                                                    newMap.put("path", pathDocument);
+
                                                     GsonBuilder gsonBuilder = new GsonBuilder();
                                                     Gson gsonObject = gsonBuilder.create();
 
                                                     final String JSONObject = gsonObject.toJson(newMap);
 
-                                                    try {
-                                                        RequestQueue requestQueue = Volley.newRequestQueue(FormActivity.this);
-                                                        String URL = "https://jithub.firebaseapp.com/users/";
-                                                        JSONObject jsonBody = new JSONObject();
-                                                        jsonBody.put("guestName", "first guest");
-                                                        jsonBody.put("content", "I got here!");
-                                                        final String requestBody = JSONObject.toString();
+                                                    RequestQueue requestQueue = Volley.newRequestQueue(FormActivity.this);
+                                                    String URL = "https://jithub.firebaseapp.com/inventario/";
+                                                    final String requestBody = JSONObject;
 
-                                                        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-                                                            @Override
-                                                            public void onResponse(String response) {
-                                                                Log.i("VOLLEY", response);
-                                                            }
-                                                        }, new Response.ErrorListener() {
-                                                            @Override
-                                                            public void onErrorResponse(VolleyError error) {
-                                                                Log.e("VOLLEY", error.toString());
-                                                            }
-                                                        }) {
-                                                            @Override
-                                                            public String getBodyContentType() {
-                                                                return "application/json; charset=utf-8";
-                                                            }
+                                                    StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                                                        @Override
+                                                        public void onResponse(String response) {
+                                                            Log.i("VOLLEY", response);
+                                                        }
+                                                    }, new Response.ErrorListener() {
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            Log.e("VOLLEY", error.toString());
+                                                        }
+                                                    }) {
+                                                        @Override
+                                                        public String getBodyContentType() {
+                                                            return "application/json; charset=utf-8";
+                                                        }
 
-                                                            @Override
-                                                            public byte[] getBody() throws AuthFailureError {
-                                                                try {
-                                                                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                                                                } catch (UnsupportedEncodingException uee) {
-                                                                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                                                                    return null;
-                                                                }
+                                                        @Override
+                                                        public byte[] getBody() throws AuthFailureError {
+                                                            try {
+                                                                return requestBody == null ? null : requestBody.getBytes("utf-8");
+                                                            } catch (UnsupportedEncodingException uee) {
+                                                                VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                                                                return null;
                                                             }
+                                                        }
 
-                                                            @Override
-                                                            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                                                                String responseString = "";
-                                                                if (response != null) {
-                                                                    responseString = String.valueOf(response.statusCode);
-                                                                    // can get more details such as response.headers
-                                                                }
-                                                                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                                                        @Override
+                                                        protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                                                            String responseString = "";
+                                                            if (response != null) {
+                                                                responseString = String.valueOf(response.statusCode);
+                                                                // can get more details such as response.headers
                                                             }
-                                                        };
+                                                            return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                                                        }
+                                                    };
 
-                                                        requestQueue.add(stringRequest);
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
+                                                    requestQueue.add(stringRequest);
 
 
                                                     Toast.makeText(FormActivity.this, "Formulário salvo com sucesso!", Toast.LENGTH_SHORT).show();
@@ -419,7 +418,7 @@ public class FormActivity extends AppCompatActivity {
                                         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
                                         Locale myLocale = new Locale("pt", "BR");
-                                        String myFormat = "dd/MM/yy"; //In which you need put here
+                                        String myFormat = "dd/MM/yyyy"; //In which you need put here
                                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, myLocale);
 
                                         dateEditText.setText(sdf.format(myCalendar.getTime()));
