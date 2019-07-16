@@ -66,6 +66,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -151,7 +153,7 @@ public class FormActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
 
-                                    Map<String, Object> resposta = new HashMap<>();
+                                    final Map<String, Object> resposta = new HashMap<>();
                                     resposta.put("reference",document.getReference());
                                     int childCount = lm.getChildCount();
 
@@ -194,6 +196,17 @@ public class FormActivity extends AppCompatActivity {
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
+                                                    Map<String,String> newMap =new HashMap<String,String>();
+                                                    for (Map.Entry<String, Object> entry : resposta.entrySet()) {
+                                                        if(entry.getValue() instanceof String){
+                                                            newMap.put(entry.getKey(), (String) entry.getValue());
+                                                        }
+                                                    }
+
+                                                    GsonBuilder gsonBuilder = new GsonBuilder();
+                                                    Gson gsonObject = gsonBuilder.create();
+
+                                                    final String JSONObject = gsonObject.toJson(newMap);
 
                                                     try {
                                                         RequestQueue requestQueue = Volley.newRequestQueue(FormActivity.this);
@@ -201,7 +214,7 @@ public class FormActivity extends AppCompatActivity {
                                                         JSONObject jsonBody = new JSONObject();
                                                         jsonBody.put("guestName", "first guest");
                                                         jsonBody.put("content", "I got here!");
-                                                        final String requestBody = jsonBody.toString();
+                                                        final String requestBody = JSONObject.toString();
 
                                                         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                                                             @Override
