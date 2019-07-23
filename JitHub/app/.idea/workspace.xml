@@ -5,8 +5,15 @@
       <config />
     </shared>
   </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf52669e-002f-48fe-91f2-a1809b31d0fa" name="Default Changelist" comment="" />
+    <list default="true" id="bf52669e-002f-48fe-91f2-a1809b31d0fa" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/company/JitHub/Activity/FormActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/company/JitHub/Activity/FormActivity.java" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,39 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/company/JitHub/Activity/FormActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="194" column="60" selection-start-line="194" selection-start-column="51" selection-end-line="194" selection-end-column="60" />
-              <folding>
-                <element signature="e#4263#14543#0" expanded="true" />
-                <element signature="e#5448#14295#0" expanded="true" />
-                <element signature="e#7829#13455#0" expanded="true" />
-                <element signature="e#8093#8108#0" expanded="true" />
-                <element signature="e#13454#13455#0" expanded="true" />
-                <element signature="e#13523#14039#0" expanded="true" />
-                <element signature="e#14038#14039#0" expanded="true" />
-                <element signature="e#14294#14295#0" expanded="true" />
-                <element signature="e#14542#14543#0" expanded="true" />
-                <element signature="e#15724#15965#0" expanded="true" />
-                <element signature="e#15964#15965#0" expanded="true" />
-                <element signature="e#16862#17101#0" expanded="true" />
-                <element signature="e#17100#17101#0" expanded="true" />
-                <element signature="e#17124#17407#0" expanded="true" />
-                <element signature="e#17406#17407#0" expanded="true" />
-                <element signature="e#17788#27961#0" expanded="true" />
-                <element signature="e#20169#21074#0" expanded="true" />
-                <element signature="e#21073#21074#0" expanded="true" />
-                <element signature="e#21141#21647#0" expanded="true" />
-                <element signature="e#21646#21647#0" expanded="true" />
-                <element signature="e#22113#23747#0" expanded="true" />
-                <element signature="e#23746#23747#0" expanded="true" />
-                <element signature="e#24695#25813#0" expanded="true" />
-                <element signature="e#25812#25813#0" expanded="true" />
-                <element signature="e#25881#27540#0" expanded="true" />
-                <element signature="e#26468#26967#0" expanded="true" />
-                <element signature="e#26966#26967#0" expanded="true" />
-                <element signature="e#27539#27540#0" expanded="true" />
-                <element signature="e#27960#27961#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="331">
+              <caret line="339" column="96" selection-start-line="339" selection-start-column="96" selection-end-line="339" selection-end-column="96" />
             </state>
           </provider>
         </entry>
@@ -108,34 +84,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="ProjectPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
-            <path>
-              <item name="JitHub" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-            </path>
-            <path>
-              <item name="JitHub" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-            </path>
-            <path>
-              <item name="JitHub" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="JitHub" type="cbb59c9e:AndroidPsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JitHub" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="JitHub" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="Activity" type="462c0819:PsiDirectoryNode" />
-            </path>
             <path>
               <item name="JitHub" type="1abcf292:AndroidViewProjectNode" />
               <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
@@ -144,6 +95,9 @@
           <select />
         </subPane>
       </pane>
+      <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -239,8 +193,18 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.20255864" />
@@ -252,15 +216,16 @@
       <window_info id="Resources Explorer" order="7" />
       <window_info id="Capture Tool" order="8" />
       <window_info anchor="bottom" id="Run" order="0" weight="0.32936078" />
-      <window_info anchor="bottom" id="Logcat" order="1" />
-      <window_info anchor="bottom" id="TODO" order="2" />
+      <window_info anchor="bottom" id="Logcat" order="1" weight="0.32936078" />
+      <window_info anchor="bottom" id="TODO" order="2" weight="0.32936078" />
       <window_info anchor="bottom" id="Debug" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="4" />
+      <window_info anchor="bottom" id="Terminal" order="4" weight="0.32936078" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" weight="0.32936078" />
-      <window_info anchor="bottom" id="Version Control" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="6" weight="0.32936078" />
       <window_info anchor="bottom" id="Build" order="7" weight="0.32936078" />
-      <window_info anchor="bottom" id="Android Profiler" order="8" />
+      <window_info anchor="bottom" id="Android Profiler" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Flutter Performance" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="10" />
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
       <window_info anchor="right" id="Gradle" order="2" />
@@ -340,39 +305,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/company/JitHub/Activity/FormActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="194" column="60" selection-start-line="194" selection-start-column="51" selection-end-line="194" selection-end-column="60" />
-          <folding>
-            <element signature="e#4263#14543#0" expanded="true" />
-            <element signature="e#5448#14295#0" expanded="true" />
-            <element signature="e#7829#13455#0" expanded="true" />
-            <element signature="e#8093#8108#0" expanded="true" />
-            <element signature="e#13454#13455#0" expanded="true" />
-            <element signature="e#13523#14039#0" expanded="true" />
-            <element signature="e#14038#14039#0" expanded="true" />
-            <element signature="e#14294#14295#0" expanded="true" />
-            <element signature="e#14542#14543#0" expanded="true" />
-            <element signature="e#15724#15965#0" expanded="true" />
-            <element signature="e#15964#15965#0" expanded="true" />
-            <element signature="e#16862#17101#0" expanded="true" />
-            <element signature="e#17100#17101#0" expanded="true" />
-            <element signature="e#17124#17407#0" expanded="true" />
-            <element signature="e#17406#17407#0" expanded="true" />
-            <element signature="e#17788#27961#0" expanded="true" />
-            <element signature="e#20169#21074#0" expanded="true" />
-            <element signature="e#21073#21074#0" expanded="true" />
-            <element signature="e#21141#21647#0" expanded="true" />
-            <element signature="e#21646#21647#0" expanded="true" />
-            <element signature="e#22113#23747#0" expanded="true" />
-            <element signature="e#23746#23747#0" expanded="true" />
-            <element signature="e#24695#25813#0" expanded="true" />
-            <element signature="e#25812#25813#0" expanded="true" />
-            <element signature="e#25881#27540#0" expanded="true" />
-            <element signature="e#26468#26967#0" expanded="true" />
-            <element signature="e#26966#26967#0" expanded="true" />
-            <element signature="e#27539#27540#0" expanded="true" />
-            <element signature="e#27960#27961#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="331">
+          <caret line="339" column="96" selection-start-line="339" selection-start-column="96" selection-end-line="339" selection-end-column="96" />
         </state>
       </provider>
     </entry>

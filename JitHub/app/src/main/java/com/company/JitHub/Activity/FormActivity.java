@@ -65,6 +65,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
@@ -323,7 +324,7 @@ public class FormActivity extends AppCompatActivity {
         });
     }
 
-    private void GravaImagens(List<String> imagens, String folderName) throws FileNotFoundException {
+    private void GravaImagens(List<String> imagens, final String folderName) throws FileNotFoundException {
 
         if (imagens == null){
             return;
@@ -334,10 +335,11 @@ public class FormActivity extends AppCompatActivity {
                 return;
             }
             FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
+            final StorageReference storageRef = storage.getReference();
 
-            StorageReference imgRef = storageRef.child(folderName + "/" + contImages);
-            contImages++;
+            StorageReference imgRef = storageRef.child(folderName + "/" + contImages + ".jpg"); 
+
+            final String caminhoImagem = folderName + "/" + contImages + ".jpg";
 
             InputStream stream = new FileInputStream(new File(img));
 
@@ -351,8 +353,74 @@ public class FormActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(FormActivity.this, "MANDOU BEM!", Toast.LENGTH_SHORT).show();
+
+                    storageRef.child(caminhoImagem).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Map<String,String> newMap =new HashMap<String,String>();
+                            newMap.put("protocolo", folderName);
+                            newMap.put("path", uri.toString());
+
+                            GsonBuilder gsonBuilder = new GsonBuilder();
+                            Gson gsonObject = gsonBuilder.create();
+
+                            final String JSONObject = gsonObject.toJson(newMap);
+
+                            RequestQueue requestQueue = Volley.newRequestQueue(FormActivity.this);
+                            String URL = "https://jithub.firebaseapp.com/imgUpload/";
+                            final String requestBody = JSONObject;
+
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    Log.i("VOLLEY", response);
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("VOLLEY", error.toString());
+                                }
+                            }) {
+                                @Override
+                                public String getBodyContentType() {
+                                    return "application/json; charset=utf-8";
+                                }
+
+                                @Override
+                                public byte[] getBody() throws AuthFailureError {
+                                    try {
+                                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                                    } catch (UnsupportedEncodingException uee) {
+                                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                                        return null;
+                                    }
+                                }
+
+                                @Override
+                                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                                    String responseString = "";
+                                    if (response != null) {
+                                        responseString = String.valueOf(response.statusCode);
+                                        // can get more details such as response.headers
+                                    }
+                                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                                }
+                            };
+
+                            requestQueue.add(stringRequest);
+
+                            Log.d("URLL", uri.toString());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("erro", caminhoImagem);
+                        }
+                    });
                 }
             });
+
+            contImages++;
         }
     }
 
