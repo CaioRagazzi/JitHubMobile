@@ -10,7 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf52669e-002f-48fe-91f2-a1809b31d0fa" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/company/JitHub/Activity/FormActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/company/JitHub/Activity/FormActivity.java" afterDir="false" />
     </list>
@@ -33,7 +32,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/company/JitHub/Activity/FormActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="331">
-              <caret line="339" column="96" selection-start-line="339" selection-start-column="96" selection-end-line="339" selection-end-column="96" />
+              <caret line="339" column="95" selection-start-line="339" selection-start-column="95" selection-end-line="339" selection-end-column="95" />
             </state>
           </provider>
         </entry>
@@ -84,6 +83,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -95,9 +97,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -222,7 +221,7 @@
       <window_info anchor="bottom" id="Terminal" order="4" weight="0.32936078" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Version Control" order="6" weight="0.32936078" />
-      <window_info anchor="bottom" id="Build" order="7" weight="0.32936078" />
+      <window_info anchor="bottom" id="Build" order="7" visible="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Android Profiler" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Flutter Performance" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="10" />
@@ -306,7 +305,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/company/JitHub/Activity/FormActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="331">
-          <caret line="339" column="96" selection-start-line="339" selection-start-column="96" selection-end-line="339" selection-end-column="96" />
+          <caret line="339" column="95" selection-start-line="339" selection-start-column="95" selection-end-line="339" selection-end-column="95" />
         </state>
       </provider>
     </entry>

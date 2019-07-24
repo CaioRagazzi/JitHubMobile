@@ -337,7 +337,7 @@ public class FormActivity extends AppCompatActivity {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             final StorageReference storageRef = storage.getReference();
 
-            StorageReference imgRef = storageRef.child(folderName + "/" + contImages + ".jpg"); 
+            StorageReference imgRef = storageRef.child(folderName + "/" + contImages + ".jpg");
 
             final String caminhoImagem = folderName + "/" + contImages + ".jpg";
 
